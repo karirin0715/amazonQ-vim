@@ -9,14 +9,14 @@ VimでAmazon Qのチャット機能を使用するためのプラグインです
 `.vimrc`または`init.vim`に以下を追加：
 
 ```vim
-call dein#add('your-username/amazonQ-vim')
+call dein#add('karirin0715/amazonQ-vim')
 ```
 
 ### 手動インストール
 
 1. このリポジトリをVimのプラグインディレクトリにクローン：
 ```bash
-git clone https://github.com/your-username/amazonQ-vim ~/.vim/pack/plugins/start/amazonQ-vim
+git clone https://github.com/karirin0715/amazonQ-vim ~/.vim/pack/plugins/start/amazonQ-vim
 ```
 
 ### 共通設定
