@@ -42,8 +42,16 @@ endfunction
 let g:amazonq_last_response = ''
 
 function! amazonq#SendToAPI(message)
-    " Call Python backend
-    let l:python_script = expand('<sfile>:p:h:h') . '/python/amazonq_client.py'
+    " Get plugin directory path
+    let l:plugin_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+    let l:python_script = l:plugin_dir . '/python/amazonq_client.py'
+    
+    " Check if Python script exists
+    if !filereadable(l:python_script)
+        echo 'Error: Python script not found at ' . l:python_script
+        return
+    endif
+    
     let l:cmd = g:amazonq_python_path . ' "' . l:python_script . '" "' . escape(a:message, '"') . '"'
     
     let l:response = system(l:cmd)
