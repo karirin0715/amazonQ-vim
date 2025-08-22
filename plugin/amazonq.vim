@@ -6,6 +6,7 @@ let g:loaded_amazonq = 1
 
 " Configuration
 let g:amazonq_python_path = get(g:, 'amazonq_python_path', 'python')
+let g:amazonq_use_wsl = get(g:, 'amazonq_use_wsl', 0)
 
 " Main command to open Amazon Q chat
 command! AmazonQChat call amazonq#OpenChat()

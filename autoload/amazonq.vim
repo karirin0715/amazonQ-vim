@@ -52,14 +52,31 @@ function! amazonq#SendToAPI(message)
         return
     endif
     
-    let l:cmd = g:amazonq_python_path . ' "' . l:python_script . '" "' . escape(a:message, '"') . '"'
+    " Show loading message
+    if bufname('%') == '__AmazonQ_Chat__'
+        call append(line('.'), ['Q: ' . a:message, 'A: Thinking...'])
+        normal! G
+        redraw
+    endif
+    
+    " Build command based on OS and WSL setting
+    if g:amazonq_use_wsl && has('win32')
+        " Convert Windows path to WSL path
+        let l:wsl_script = substitute(l:python_script, '\\', '/', 'g')
+        let l:wsl_script = substitute(l:wsl_script, '^\([A-Za-z]\):', '/mnt/\L\1', '')
+        let l:cmd = 'wsl ' . g:amazonq_python_path . ' "' . l:wsl_script . '" "' . escape(a:message, '"') . '"'
+    else
+        let l:cmd = g:amazonq_python_path . ' "' . l:python_script . '" "' . escape(a:message, '"') . '"'
+    endif
     
     let l:response = system(l:cmd)
     let g:amazonq_last_response = l:response
     
     " Display response in current buffer
     if bufname('%') == '__AmazonQ_Chat__'
-        call append(line('.'), ['Q: ' . a:message, 'A: ' . l:response, ''])
+        " Replace the "Thinking..." line with actual response
+        call setline(line('.'), 'A: ' . l:response)
+        call append(line('.'), '')
         normal! G
     else
         echo 'Amazon Q: ' . l:response

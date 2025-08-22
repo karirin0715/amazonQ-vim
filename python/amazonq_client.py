@@ -5,24 +5,29 @@ import subprocess
 
 def send_to_amazonq(message):
     """
-    Amazon Q APIにメッセージを送信
-    実際の実装では適切なAPIエンドポイントとクレデンシャルが必要
+    qDeveloperCliを使用してAmazon Qにメッセージを送信
     """
     try:
-        # AWS CLIを使用してAmazon Qと通信（例）
-        # 実際の実装では適切なSDKを使用
-        cmd = ['aws', 'q', 'chat', '--message', message]
+        # qDeveloperCliを使用してAmazon Qと通信
+        # --no-inputフラグでインタラクティブモードを無効化
+        cmd = ['q', 'chat', '--no-input', message]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         
         if result.returncode == 0:
-            return result.stdout.strip()
+            # 出力から不要なプロンプトやコントロール文字を除去
+            output = result.stdout.strip()
+            # 最初の行がプロンプトの場合は除去
+            lines = output.split('\n')
+            if lines and ('>' in lines[0] or 'Q:' in lines[0]):
+                lines = lines[1:]
+            return '\n'.join(lines).strip()
         else:
             return f"Error: {result.stderr.strip()}"
             
     except subprocess.TimeoutExpired:
         return "Error: Request timed out"
     except FileNotFoundError:
-        return "Error: AWS CLI not found. Please install AWS CLI and configure Amazon Q access."
+        return "Error: qDeveloperCli not found. Please install qDeveloperCli and configure Amazon Q access."
     except Exception as e:
         return f"Error: {str(e)}"
 

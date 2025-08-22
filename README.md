@@ -21,7 +21,7 @@ git clone https://github.com/karirin0715/amazonQ-vim ~/.vim/pack/plugins/start/a
 
 ### 共通設定
 
-2. AWS CLIをインストールし、Amazon Qへのアクセスを設定
+2. qDeveloperCliをインストールし、Amazon Qへのアクセスを設定
 
 ## 使用方法
 
@@ -52,10 +52,27 @@ git clone https://github.com/karirin0715/amazonQ-vim ~/.vim/pack/plugins/start/a
 ```vim
 " Pythonのパスを指定（デフォルト: 'python'）
 let g:amazonq_python_path = 'python3'
+
+" WSLを使用する場合（Windows環境）
+let g:amazonq_use_wsl = 1
 ```
+
+### Windows環境での設定例
+
+```vim
+" WSL経由でPythonを実行
+let g:amazonq_use_wsl = 1
+let g:amazonq_python_path = 'python3'
+
+" 直接Windows Pythonを使用
+let g:amazonq_use_wsl = 0
+let g:amazonq_python_path = 'C:\Python39\python.exe'
+```
+
+[AmazonCLIインストール](./amaznoCliSetting.md)
 
 ## 必要な環境
 - Vim 8.0以上
 - Python 3.6以上
-- AWS CLI
+- qDeveloperCli
 - Amazon Qへのアクセス権限
