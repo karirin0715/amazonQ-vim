@@ -84,10 +84,12 @@ function! amazonq#SendToAPI(message)
         " Convert Windows path to WSL path
         let l:wsl_script = substitute(l:python_script, '\\', '/', 'g')
         let l:wsl_script = substitute(l:wsl_script, '^\([A-Za-z]\):', '/mnt/\L\1', '')
-        let l:cmd = 'wsl ' . g:amazonq_python_path . ' "' . l:wsl_script . '" "' . escape(a:message, '"') . '"'
+        let l:cmd = 'wsl -d Ubuntu ' . g:amazonq_python_path . ' "' . l:wsl_script . '" "' . escape(a:message, '"') . '"'
     else
         let l:cmd = g:amazonq_python_path . ' "' . l:python_script . '" "' . escape(a:message, '"') . '"'
     endif
+    
+    echo 'Executing command: ' . l:cmd
     
     let l:response = system(l:cmd)
     let g:amazonq_last_response = l:response
