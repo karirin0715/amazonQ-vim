@@ -42,11 +42,31 @@ endfunction
 let g:amazonq_last_response = ''
 
 function! amazonq#SendToAPI(message)
-    " Get plugin directory path
-    let l:plugin_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+    " Find the plugin directory more reliably
+    let l:script_path = expand('<sfile>:p')
+    let l:plugin_dir = fnamemodify(l:script_path, ':h:h')
     let l:python_script = l:plugin_dir . '/python/amazonq_client.py'
     
-    " Check if Python script exists
+    " Debug info
+    echo 'Script path: ' . l:script_path
+    echo 'Plugin dir: ' . l:plugin_dir
+    echo 'Python script: ' . l:python_script
+    echo 'File exists: ' . filereadable(l:python_script)
+    
+    " Fallback: search in runtimepath
+    if !filereadable(l:python_script)
+        echo 'Searching in runtimepath...'
+        for l:path in split(&runtimepath, ',')
+            let l:candidate = l:path . '/python/amazonq_client.py'
+            echo 'Checking: ' . l:candidate
+            if filereadable(l:candidate)
+                let l:python_script = l:candidate
+                echo 'Found at: ' . l:python_script
+                break
+            endif
+        endfor
+    endif
+    
     if !filereadable(l:python_script)
         echo 'Error: Python script not found at ' . l:python_script
         return
